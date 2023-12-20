@@ -12,14 +12,15 @@ const todos = useCollection(collection(db, 'todos'))
 
 
 let contenidoNota = ref('')
-function altaNota(){
+function nuevanota(valor){
   const docRef = addDoc(collection(db, "todos"), {
-  texto: contenidoNota.value,
-  prioridad: "medio"
+  texto: valor,
+  prioridad: "medio",
+  editando:false
 });
 contenidoNota.value = ''
 }
-function eliminarNota(id){
+function borranota(id){
   console.log('eliminando nota')
   deleteDoc(doc(db, 'todos', id));
 }
@@ -33,13 +34,10 @@ function editarNota(id){
 </script>
 
 <template>
-    <input v-model="contenidoNota" type="text">
-    <button @click="altaNota">Alta</button>
-  <ul>
-    <li v-for="todo in todos" :key="todo.id">
-      <span>{{ todo.texto }}</span>
-      <div class="prioridadsContainer"><p>Prioridad</p><div class="prioridades__buttons"><button>Alta</button><button>Media</button><button>Baja</button></div></div>
-      <div class="botonesEB"><button @click="editarNota(todo.id)">Editar</button><button @click="eliminarNota(todo.id)">Eliminar</button></div>
-    </li>
-  </ul>
+    <header>
+      <div class="wrapper">
+          <cabecera @nuevasnota="nuevanota"></cabecera>
+          <cuerpo :listanotas="todos" @borra="borranota" @edita="editaNota"></cuerpo>
+      </div>
+  </header>
 </template>

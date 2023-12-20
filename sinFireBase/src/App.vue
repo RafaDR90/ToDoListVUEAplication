@@ -41,11 +41,9 @@ function editaNota(id){
 
 <template>
   <header>
-    <header>
       <div class="wrapper">
           <cabecera @nuevasnota="reciboNota"></cabecera>
           <cuerpo :listanotas="arrayNotas" @borra="borranotas" @edita="editaNota"></cuerpo>
       </div>
-  </header>
   </header>
 </template>
