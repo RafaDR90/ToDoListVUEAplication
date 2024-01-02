@@ -12,22 +12,23 @@ const todos = useCollection(collection(db, 'todos'))
 
 
 let contenidoNota = ref('')
+
 function nuevanota(valor){
-  const docRef = addDoc(collection(db, "todos"), {
-  texto: valor,
-  prioridad: "medio",
-  editando:false
-});
+  if(valor.trim().length>0){
+    const docRef = addDoc(collection(db, "todos"), {
+    texto: valor,
+    prioridad: "medio",
+    editando:false
+    });
+  }
 contenidoNota.value = ''
 }
 function borranota(id){
-  console.log('eliminando nota')
   deleteDoc(doc(db, 'todos', id));
 }
-function editarNota(id){
-  console.log('editando nota')
+function editaNota(id,nuevoTexto){
   updateDoc(doc(db, 'todos', id), {
-  texto: 'nota editada'
+  texto: nuevoTexto
   });
 
 }
@@ -37,7 +38,7 @@ function editarNota(id){
     <header>
       <div class="wrapper">
           <cabecera @nuevasnota="nuevanota"></cabecera>
-          <cuerpo :listanotas="todos" @borra="borranota" @edita="editaNota"></cuerpo>
+          <cuerpo :listanotas="todos" @borra="borranota" @actualizar="editaNota"></cuerpo>
       </div>
   </header>
 </template>
