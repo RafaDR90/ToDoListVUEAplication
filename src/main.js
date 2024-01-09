@@ -1,5 +1,5 @@
 import './assets/main.css'
-
+import router from './router'
 import { createApp } from 'vue'
 import App from './App.vue'
 import { VueFire, VueFireAuth } from 'vuefire'
@@ -14,5 +14,5 @@ app.use(VueFire, {
     VueFireAuth(),
   ],
 })
-
+app.use(router)
 app.mount('#app')

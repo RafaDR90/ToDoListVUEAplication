@@ -65,6 +65,15 @@
             <li v-for="item in listanotas" :key="item.id">
                 <div class="liContainer" v-if="item != itemEditando">
                     <div class="nombreNota">{{ item.texto }}</div>
+                    <div v-if="item.img!=null" class="conteneorImagen">
+                        <div v-if="!item.verImg" class="buttonVerImgContainer">
+                            <button @click="item.verImg=true">Ver imagen</button>
+                        </div>
+                        <div v-else class="imagenYButtonContainer">
+                            <img :src="item.img" alt="Imagen de la nota" width="100px" height="100px">
+                            <br><button @click="item.verImg=false">Ocultar imagen</button>
+                        </div>
+                    </div>
                     <div>
                         <input type="checkbox" v-model="item.completada" @change="cambiaEstado(item)">
                         <label>Completada</label>
