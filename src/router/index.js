@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import toDos from '../views/toDos.vue'
 import HomeView from '../views/homePage.vue'
+import Register from '../views/registerView.vue'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 var usuarioAutenticado=false;
@@ -34,6 +35,11 @@ const router = createRouter({
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/toDos.vue')
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: Register
     }
   ]
 })
