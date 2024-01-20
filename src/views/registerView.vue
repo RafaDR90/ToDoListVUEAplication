@@ -1,5 +1,7 @@
 <script setup>
     import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+    import router from "@/router";
+
     function register(email,password){
         const auth = getAuth();
         createUserWithEmailAndPassword(auth, email, password)
@@ -8,6 +10,8 @@
             const user = userCredential.user;
             // ...
             console.log('exito',user);
+            router.push('/todo')
+          
         })
         .catch((error) => {
             const errorCode = error.code;

@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import toDos from '../views/toDos.vue'
-import HomeView from '../views/homePage.vue'
+import LoginView from '../views/loginView.vue'
 import Register from '../views/registerView.vue'
+import landingPage from '../views/landingView.vue'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 var usuarioAutenticado=false;
@@ -25,8 +26,13 @@ const router = createRouter({
   routes: [
     {
       path: '/',
+      name: 'homePague',
+      component: landingPage
+    },
+    {
+      path: '/login',
       name: 'home',
-      component: HomeView
+      component: LoginView
     },
     {
       path: '/todo',

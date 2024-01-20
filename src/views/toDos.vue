@@ -16,9 +16,9 @@ const auth = getAuth();
 let usuario=ref(getAuth().currentUser);
 onAuthStateChanged(getAuth(), (user) => {
       usuario.value = user; // Actualizar la variable usuario cuando cambie el estado de autenticación
-      //if(usuario.value.uid!="")
-      todos = useCollection(query(coleccion,where("uid", "==", usuario.value.uid)))
-
+      if(usuario.value.uid!="DwPPhFEaWDhfT9ssyFhCj9fOwjk2"){ //si es admin no cargara por uid, las vera todas
+        todos = useCollection(query(coleccion,where("uid", "==", usuario.value.uid)))
+      }
     });
 
 

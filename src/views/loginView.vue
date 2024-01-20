@@ -2,6 +2,7 @@
 import { getAuth, signInWithPopup, GoogleAuthProvider,signOut,onAuthStateChanged,signInWithEmailAndPassword  } from "firebase/auth";
 import {ref} from 'vue';
 import { GithubAuthProvider } from "firebase/auth";
+import router from "@/router";
 
 
 
@@ -21,6 +22,7 @@ signInWithEmailAndPassword(auth, email, password)
     // Signed in 
     usuario=auth.currentUser;
     console.log(usuario)
+    router.push('/todo')
     
     // ...
   })
@@ -41,7 +43,7 @@ function iniciaSesion(){
     const token = credential.accessToken;
     // The signed-in user info.
     usuario.value=result.user;
-  
+    router.push('/todo')
     // IdP data available using getAdditionalUserInfo(result)
     // ...
   }).catch((error) => {
@@ -69,6 +71,7 @@ function iniciaSesionGH(){
     const user = result.user;
     usuario.value=user;
     console.log(user)
+    router.push('/todo')
     // IdP data available using getAdditionalUserInfo(result)
     // ...
   }).catch((error) => {
@@ -88,6 +91,7 @@ function cerrarSesion(){
 signOut(auth).then(() => {
   usuario.value=null;
   console.log('sesion cerrada');
+  router.push('/')
 }).catch((error) => {
   // An error happened.
 }); 
