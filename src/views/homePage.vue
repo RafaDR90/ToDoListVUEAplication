@@ -1,31 +1,27 @@
 <script setup>
 import { getAuth, signInWithPopup, GoogleAuthProvider,signOut,onAuthStateChanged,signInWithEmailAndPassword  } from "firebase/auth";
 import {ref} from 'vue';
+import { GithubAuthProvider } from "firebase/auth";
+
+
+
+
 
 
 //variable reactiva
 let usuarioAutenticado=ref(false);
 const auth = getAuth();
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    usuarioAutenticado.value=true;
-    // User is signed in, see docs for a list of available properties
-    // https://firebase.google.com/docs/reference/js/auth.user
-    const uid = user.uid;
-    // ...
-  } else {
-    usuarioAutenticado.value=false;
-    // User is signed out
-    // ...
-  }
-});
+let usuario=ref(auth.currentUser);
+
+
 function login(email,password){
   const auth = getAuth();
 signInWithEmailAndPassword(auth, email, password)
   .then((userCredential) => {
     // Signed in 
-    const user = userCredential.user;
-    console.log('exito',user)
+    usuario=auth.currentUser;
+    console.log(usuario)
+    
     // ...
   })
   .catch((error) => {
@@ -44,8 +40,8 @@ function iniciaSesion(){
     const credential = GoogleAuthProvider.credentialFromResult(result);
     const token = credential.accessToken;
     // The signed-in user info.
-    const user = result.user;
-    console.log('sesion iniciada');
+    usuario.value=result.user;
+  
     // IdP data available using getAdditionalUserInfo(result)
     // ...
   }).catch((error) => {
@@ -59,10 +55,38 @@ function iniciaSesion(){
     // ...
   });
 }
+
+function iniciaSesionGH(){
+  const auth = getAuth();
+  const provider = new GithubAuthProvider();
+  signInWithPopup(auth, provider)
+  .then((result) => {
+    // This gives you a GitHub Access Token. You can use it to access the GitHub API.
+    const credential = GithubAuthProvider.credentialFromResult(result);
+    const token = credential.accessToken;
+    
+    // The signed-in user info.
+    const user = result.user;
+    usuario.value=user;
+    console.log(user)
+    // IdP data available using getAdditionalUserInfo(result)
+    // ...
+  }).catch((error) => {
+    // Handle Errors here.
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // The email of the user's account used.
+    const email = error.customData.email;
+    // The AuthCredential type that was used.
+    const credential = GithubAuthProvider.credentialFromError(error);
+    // ...
+  });
+}
+
 function cerrarSesion(){
     const auth = getAuth();
 signOut(auth).then(() => {
-  // Sign-out successful.
+  usuario.value=null;
   console.log('sesion cerrada');
 }).catch((error) => {
   // An error happened.
@@ -73,14 +97,15 @@ signOut(auth).then(() => {
 <template>
   <div>
     <h2>Login</h2>
-    <form v-if="!usuarioAutenticado" @submit.prevent="login(email,password)">
+    <form v-if="!usuario" @submit.prevent="login(email,password)">
       <label for="email">Email</label>
       <input type="email" id="email" name="email" v-model="email">
       <label for="password">Password</label>
       <input type="password" id="password" name="password" v-model="password">
       <button type="submit" @click="login">Login</button>
     </form>
-      <button v-if="!usuarioAutenticado" @click="iniciaSesion">Inicia sesion con gmail</button>
+      <button v-if="!usuario" @click="iniciaSesion">Inicia sesion con gmail</button>
+      <button v-if="!usuario" @click="iniciaSesionGH">Inicia sesion con GitHub</button>
       <button v-else @click="cerrarSesion">Cerrar sesion</button>
   </div>
 </template>

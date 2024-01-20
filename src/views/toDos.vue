@@ -10,30 +10,17 @@ import { getStorage,getDownloadURL,uploadBytes,ref as storageRef } from "firebas
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 let db = useFirestore()
 const coleccion = collection(db, 'todos')
-
-let usuario=ref('');
+let todos = useCollection(collection(db, 'todos')) // Instancia nombre de la colección
 let usuarioAutenticado=ref(false);
 const auth = getAuth();
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    usuarioAutenticado.value=true;
-    usuario.value=user.uid;
-    todos = useCollection(query(coleccion,where("uid", "==", usuario.value)))
-    // User is signed in, see docs for a list of available properties
-    // https://firebase.google.com/docs/reference/js/auth.user
-    const uid = user.uid;
-    // ...
-  } else {
-    usuarioAutenticado.value=false;
-    // User is signed out
-    // ...
-  }
-});
-console.log(usuario.value+'asdasd')
+let usuario=ref(getAuth().currentUser);
+onAuthStateChanged(getAuth(), (user) => {
+      usuario.value = user; // Actualizar la variable usuario cuando cambie el estado de autenticación
+      //if(usuario.value.uid!="")
+      todos = useCollection(query(coleccion,where("uid", "==", usuario.value.uid)))
 
+    });
 
-console.log(usuario.value)
-const todos = useCollection(query(coleccion,where("uid", "==", usuario.value)))
 
 
 let contenidoNota = ref('')
@@ -59,6 +46,8 @@ function nuevanota(valor, imagen) {
 }
 
 function agregarNota(texto, imgUrl) {
+  const uid = usuario.value.uid; // Obtén el UID del usuario actual
+
   addDoc(collection(db, "todos"), {
     texto: texto,
     prioridad: "media",
@@ -66,7 +55,7 @@ function agregarNota(texto, imgUrl) {
     completada: false,
     verImg: false,
     img: imgUrl, // Será null si no hay imagen
-    uid: usuario.value
+    uid: uid // Almacena el UID en el campo "uid"
   });
 }
 

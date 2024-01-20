@@ -1,11 +1,18 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import {ref} from 'vue';
+const auth = getAuth();
+let usuario=ref(getAuth().currentUser);
+onAuthStateChanged(getAuth(), (user) => {
+      usuario.value = user; // Actualizar la variable usuario cuando cambie el estado de autenticación
+    });
 
 </script>
 
 <template>
     <header>
-      <h1>Bienvenido</h1>
+      <h1>Bienvenido {{ usuario ? usuario.displayName : '' }}</h1>
       <div class="nav">
         <RouterLink to="/">Login&nbsp;&nbsp;</RouterLink>
         <RouterLink to="/register">Register&nbsp;&nbsp;</RouterLink>
